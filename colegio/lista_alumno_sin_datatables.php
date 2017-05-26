@@ -7,29 +7,43 @@
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
-<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.15/css/jquery.dataTables.css"> 
-    <script src="https://cdn.datatables.net/plug-ins/1.10.15/i18n/Spanish.json"></script>
-<script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.15/js/jquery.dataTables.js"></script>
-<script>
-$(document).ready(function(){
-    $('#myTable').DataTable( {
-        "language": {
-                "url": "https://cdn.datatables.net/plug-ins/1.10.15/i18n/Spanish.json"
-            }
-        });
-     
-});
-</script>
+
 </head>
 
 <body style="margin:.2rem;">
 <h1> Base de datos Sensual</h1>
 <?php
-	
-	$db = new PDO("mysql:host=localhost;dbname=colegio;", "root", "Akessa2684");
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
+        $db = new PDO("mysql:host=localhost;dbname=colegio;", "root", "Akessa2684");
 	$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $sql = "SELECT COUNT(*) FROM alumno";
+        try {
+		$st = $db->prepare($sql);
+		$st->execute();	
+	} catch (PDOException $e) {
+		echo $e->getMessage();
+		return false;
+	}
+       
+       
 			
-	$sql = "SELECT * FROM alumno";
+	 $totalAlumnos = $st->fetch(PDO::FETCH_ASSOC)['COUNT(*)'];
+      //  var_dump ($totalAlumnos);
+         //paginacion
+        $filasPorPagina = 3;
+        $numeroPaginaActual = isset($_GET['pagina']) ? $_GET['pagina'] : 1;
+        $offset = ($numeroPaginaActual -1) * $filasPorPagina;
+        
+        $columnaOrden = isset($_GET['columna_orden']) ? $_GET['columna_orden'] : 'nombre';
+        $ordenLista = isset($_GET['orden']) ? $_GET['orden'] : 'asc';
+	$sql = "SELECT * FROM alumno
+                ORDER BY " . $columnaOrden . ' ' . $ordenLista ."
+                 LIMIT " .  $filasPorPagina . ' OFFSET ' . $offset; 
+        $numeroPaginas = $totalAlumnos / $filasPorPagina;
+        //var_dump (ceil($numeroPaginas));
 	
 	try {
 		$st = $db->prepare($sql);
@@ -44,19 +58,35 @@ $(document).ready(function(){
 	
 	$primeraFila = $st->fetch(PDO::FETCH_ASSOC);
 	$nombreColumnas = array_keys($primeraFila);
-	echo '<table id="myTable" class="display">';
-	echo '<thead>';
-	echo '<tr>';
-	foreach ($nombreColumnas as $nombreColumna) {
-		echo '<td>' . $nombreColumna . '</td>';	
-	}
-	echo '</tr>';
-	echo '</thead>';
+        ?>
+	<table id="myTable" class="display">
+	<thead>
+	<tr>
+	<?php foreach ($primeraFila as $nombreColumna => $datoPrimeraFila) { ?>
+        <?php
+            if ($nombreColumna == $columnaOrden)  {
+                $ordenEnlace = $ordenLista == 'asc' ? 'desc' : 'asc';
+            }else {
+                $ordenEnlace = 'asc';
+            }
+           $parametrosUrl = 'columna_orden=' . $nombreColumna . '&' . 'orden=' . $ordenEnlace;
+           ?>
+            <th>
+                <a href="lista_alumno_sin_datatables.php?<?php echo $parametrosUrl ?>">
+                    <?php echo $nombreColumna ?>
+                </a>
+            </th>
+             
+        <?php } ?>
+             
+	</tr>
+	</thead>
+        
 	
-	echo '<tbody>';
-	echo '<tr>';
+	<tbody>
+	<tr>
         
-        
+        <?php 
 	foreach ($primeraFila as $elementoPrimeraFila) {
 		echo '<td>' . $elementoPrimeraFila . '</td>';	
                 
@@ -81,6 +111,9 @@ $(document).ready(function(){
 	echo '</tbody>';
 	echo '</table>';
 	
+        for($i=1; $i<=ceil($numeroPaginas); $i++) {
+            echo '<a href="lista_alumno_sin_datatables.php?pagina=' . $i . '&' . 'columna_orden=' . $columnaOrden . '&' . 'orden=' . $ordenLista . '">' . $i . '</a>'; 
+        }
 	
 ?>
 <h2>Introduzca aqui los datos a subir</h2>

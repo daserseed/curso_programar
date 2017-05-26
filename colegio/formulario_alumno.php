@@ -71,8 +71,32 @@
      <label>NIF</label><br>
     <input type="text" name="nif"><br>
      <label>Nota</label><br>
-    <input type="number" name="nota"><br>
+    <input type="text" name="nota"><br>
     <input name="foto" type="file"><br>
+    <?php
+	
+  $db = new PDO("mysql:host=localhost;dbname=colegio;", "root", "Akessa2684");
+	$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+			
+	$sql = "SELECT * FROM curso";
+	
+	try {
+		$st = $db->prepare($sql);
+		$st->execute();	
+	} catch (PDOException $e) {
+		echo $e->getMessage();
+		return false;
+	}
+	echo '<select name="curso">';
+	while ($fila = $st->fetch(PDO::FETCH_ASSOC)) {
+		echo '<option name="curso" value="' . $fila['id'] . '">' . $fila['nombre'] . '</option>';	
+	}
+	echo '</select>';
+	
+	
+	?>
+    <input type="checkbox" value="id a poner">
+           
     <input type="submit" value="Enviar">
 
 </form>

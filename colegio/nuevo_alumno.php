@@ -7,6 +7,8 @@
 
 <body>
 <?php
+
+
 // con esto conectas a la base de datos
 		$db = new PDO("mysql:host=localhost;dbname=colegio;", "root", "Akessa2684");
 	$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
