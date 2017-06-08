@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>       
+
+    </head>
+    <body>
+         <script>
+            $.ajax({
+              url: 'hola_mundo_respuesta.html' ,
+              method: 'POST' ,
+              data: {id: 4},
+              success: function(respuesta) {
+                  alert(respuesta);
+                  
+              }
+            });
+        </script>
+    </body>
+</html>

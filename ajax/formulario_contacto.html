@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style type="text/css">
+            .cargando {
+                display:none;
+                
+            }
+            .mensajeform {
+                display:none;
+                padding:.5rem;
+                background-color:#a2d45a;
+                margin-top:2.5rem;
+                border-radius:12px;
+                
+            }
+        </style>
+    </head>
+    <body>
+        <form>
+            <label>Nombre</label>
+            <input type="text" name="nombre">
+            <label>Email</label>
+            <input type="text" name="email">
+            <input type="submit" value="Enviar"><br><br>
+            <img class="cargando" src="imagenes/ajax-loader.gif" alt="cargando"><span class="mensajeform"></span>
+        </form>
+        <script src="https://code.jquery.com/jquery-3.2.1.min.js" crossorigin="anonymous"></script>
+        <script>
+           $('[type="submit"]').on('click', function(event) {
+               event.preventDefault();
+               $('.cargando').show('fast');
+               //recuperamos los valores introducidos en las casillas
+             
+               var formulario_serializado = $('form').serialize();
+               
+               $.ajax({
+                url: "guardar_contacto.php",
+                method: "POST",
+                data: formulario_serializado,
+                success: function() {
+                     $('.mensajeform').show('fast');
+                    $('.mensajeform').text('Hemos recibido tu mensaje');
+                    $('.cargando').hide('slow');
+                    
+                },
+                error: function() {
+                    $('.mensajeform').text('Ha habido un error, inténtelo de nuevo más tarde');
+                }
+               });
+                       
+           });
+        </script>
+    </body>
+</html>

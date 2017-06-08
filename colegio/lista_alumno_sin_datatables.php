@@ -17,7 +17,7 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-        $db = new PDO("mysql:host=localhost;dbname=colegio;", "root", "Akessa2684");
+        $db = new PDO("mysql:host=localhost;dbname=colegio;charset=utf8", "root", "Akessa2684");
 	$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $sql = "SELECT COUNT(*) FROM alumno";
         try {

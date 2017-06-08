@@ -47,7 +47,7 @@
     <label>curso</label><br>
     <?php
 	
-  $db = new PDO("mysql:host=localhost;dbname=colegio;", "root", "Akessa2684");
+  $db = new PDO("mysql:host=localhost;dbname=colegio;charset=utf8", "root", "Akessa2684");
 	$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 			
 	$sql = "SELECT * FROM curso";
@@ -65,6 +65,7 @@
 	}
 	echo '</select>';
 	
+        
 	
 	?>
 	<br>
@@ -73,29 +74,30 @@
      <label>Nota</label><br>
     <input type="text" name="nota"><br>
     <input name="foto" type="file"><br>
-    <?php
+   
 	
-  $db = new PDO("mysql:host=localhost;dbname=colegio;", "root", "Akessa2684");
+	<?php
+        
+        $db = new PDO("mysql:host=localhost;dbname=colegio;charset=utf8", "root", "Akessa2684");
 	$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 			
-	$sql = "SELECT * FROM curso";
+	$sql = "SELECT * FROM actividad_extra";
 	
 	try {
 		$st = $db->prepare($sql);
 		$st->execute();	
+                
+                 while($fila = $st->fetch(PDO::FETCH_ASSOC)) { ?>
+            <label><?php echo $fila['nombre'] ?></label>
+            <input type="checkbox" value="<?php echo $fila['id']?>" name="actividad_extra[]"><br>
+        <?php } 
+        
 	} catch (PDOException $e) {
 		echo $e->getMessage();
 		return false;
 	}
-	echo '<select name="curso">';
-	while ($fila = $st->fetch(PDO::FETCH_ASSOC)) {
-		echo '<option name="curso" value="' . $fila['id'] . '">' . $fila['nombre'] . '</option>';	
-	}
-	echo '</select>';
-	
-	
-	?>
-    <input type="checkbox" value="id a poner">
+       
+       ?>
            
     <input type="submit" value="Enviar">
 

@@ -1,17 +1,42 @@
-<!DOCTYPE html>
-<!--
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
--->
+<!doctype html>
 <html>
-    <head>
-        <title>TODO supply a title</title>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    </head>
-    <body>
-       <form action="nuevo_alumno.php" method="post" enctype="multipart/form-data" >
+<head>
+<meta charset="UTF-8">
+<title>Documento sin título</title>
+<style>
+	form {
+		margin-left:auto;
+		margin-right:auto;
+		width:50%;	
+	}
+	form * {
+	width:100%;	
+	}
+	
+</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/themes/base/jquery-ui.min.css">
+
+</head>
+
+<body>
+<?php
+// con esto conectas a la base de datos
+	$conn = new mysqli("localhost", "root", "Akessa2684", "colegio");
+	$sql = "SELECT * FROM provincia";
+	$result = $conn->query($sql);
+	echo '<select>';
+	while ($fila = $result->fetch_assoc()) {
+		echo '<option>' . $fila['nombre'] . '</option>';	
+	}
+	echo '</select>';
+	//con esto cierras conexion con la base de datos
+	$conn->close();
+?>
+
+<h2>Rellena para introducir alumno</h2>
+
+
+<form action="nuevo_alumno.php" method="post" enctype="multipart/form-data" >
 
 	<label>Nombre</label><br>
     <input type="text" name="nombre"><br>
@@ -22,7 +47,7 @@ and open the template in the editor.
     <label>curso</label><br>
     <?php
 	
-  $db = new PDO("mysql:host=localhost;dbname=colegio;", "root", "Akessa2684");
+  $db = new PDO("mysql:host=localhost;dbname=colegio;charset=utf8", "root", "Akessa2684");
 	$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 			
 	$sql = "SELECT * FROM curso";
@@ -40,6 +65,7 @@ and open the template in the editor.
 	}
 	echo '</select>';
 	
+        
 	
 	?>
 	<br>
@@ -48,8 +74,45 @@ and open the template in the editor.
      <label>Nota</label><br>
     <input type="text" name="nota"><br>
     <input name="foto" type="file"><br>
+   
+	
+	<?php
+        
+        $db = new PDO("mysql:host=localhost;dbname=colegio;charset=utf8", "root", "Akessa2684");
+	$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+			
+	$sql = "SELECT * FROM actividad_extra";
+	
+	try {
+		$st = $db->prepare($sql);
+		$st->execute();	
+                
+                 while($fila = $st->fetch(PDO::FETCH_ASSOC)) { ?>
+            <label><?php echo $fila['nombre'] ?></label>
+            <input type="checkbox" value="<?php echo $fila['id']?>" name="actividad_extra[]"><br>
+        <?php } 
+        
+	} catch (PDOException $e) {
+		echo $e->getMessage();
+		return false;
+	}
+       
+       ?>
+           
     <input type="submit" value="Enviar">
 
 </form>
-    </body>
+
+
+<script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js" integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.9.2/i18n/jquery.ui.datepicker-es.min.js"></script>
+<script>
+	$(function() {
+		$("#datepicker").datepicker(
+			$.datepicker.regional["es"]
+		);
+	});
+</script>
+</body>
 </html>

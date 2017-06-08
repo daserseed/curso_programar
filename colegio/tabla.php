@@ -26,7 +26,7 @@ $(document).ready(function(){
 <h1> Base de datos Sensual</h1>
 <?php
 	
-	$db = new PDO("mysql:host=localhost;dbname=colegio;", "root", "Akessa2684");
+	$db = new PDO("mysql:host=localhost;dbname=colegio;charset=utf8", "root", "Akessa2684");
 	$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 			
 	$sql = "SELECT * FROM alumno";
@@ -87,7 +87,7 @@ $(document).ready(function(){
 
 <?php
 // con esto conectas a la base de datos
-	$db = new PDO("mysql:host=localhost;dbname=colegio;", "root", "Akessa2684");
+	$db = new PDO("mysql:host=localhost;dbname=colegio;charset=utf8", "root", "Akessa2684");
 	$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 			
 	$sql = "SELECT * FROM provincia";
@@ -123,7 +123,7 @@ $(document).ready(function(){
     <label>curso</label><br>
     <?php
 	
-  $db = new PDO("mysql:host=localhost;dbname=colegio;", "root", "Akessa2684");
+  $db = new PDO("mysql:host=localhost;dbname=colegio;charset=utf8", "root", "Akessa2684");
 	$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 			
 	$sql = "SELECT * FROM curso";
